@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flujo de Interacción - Snoopy Store Bolivia</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: #e8eef3;
+            min-height: 100vh;
+            padding: 20px 10px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before,
+        body::after {
+            content: '';
+            position: fixed;
+            width: 300px;
+            height: 300px;
+            background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><path d="M100,50 Q120,70 100,90 Q80,70 100,50" fill="none" stroke="%23ffd600" stroke-width="2" opacity="0.2"/><path d="M100,50 Q120,30 140,50 Q120,70 100,50" fill="none" stroke="%23ffd600" stroke-width="2" opacity="0.2"/></svg>');
+            background-repeat: no-repeat;
+            opacity: 0.3;
+            pointer-events: none;
+        }
+
+        body::before {
+            top: -50px;
+            left: -50px;
+        }
+
+        body::after {
+            bottom: -50px;
+            right: -50px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            background: #ffd600;
+            padding: 25px 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            color: #000000;
+            font-size: 2.2rem;
+            font-weight: bold;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .users-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            margin-bottom: 40px;
+        }
+
+        .user-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .user-name {
+            color: #000000;
+            font-size: 1.6rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .user-marker {
+            width: 16px;
+            height: 16px;
+            background: #e63946;
+            border-radius: 50%;
+            margin-bottom: 15px;
+        }
+
+        .flow-box {
+            background: white;
+            border: 3px solid #000000;
+            border-radius: 15px;
+            padding: 16px 20px;
+            margin-bottom: 12px;
+            width: 100%;
+            max-width: 200px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .flow-box:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .flow-box p {
+            color: #333;
+            font-size: 0.85rem;
+            line-height: 1.35;
+        }
+
+        .decisions-top {
+            display: flex;
+            justify-content: center;
+            gap: 90px;
+            margin: 12px 0 15px 0;
+        }
+
+        .decision-btn {
+            background: #8b7355;
+            color: white;
+            padding: 6px 18px;
+            border: 3px solid #000000;
+            border-radius: 12px;
+            font-weight: bold;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .decision-btn:hover {
+            background: #ffd600;
+            color: #000000;
+            transform: scale(1.05);
+        }
+
+        .arrow {
+            width: 0;
+            height: 0;
+            border-left: 8px solid transparent;
+            border-right: 8px solid transparent;
+            border-top: 14px solid #e63946;
+            margin: 8px auto;
+        }
+
+        .branches {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            width: 100%;
+        }
+
+        .branch {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .single-btn {
+            display: flex;
+            justify-content: center;
+            margin: 12px 0 15px 0;
+        }
+
+        .sub-branches {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            width: 100%;
+        }
+
+        .sub-branch {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .decisions-bottom {
+            display: flex;
+            justify-content: center;
+            gap: 70px;
+            margin: 12px 0 15px 0;
+        }
+
+        .back-button {
+            text-align: right;
+            margin-top: 40px;
+        }
+
+        .btn-back {
+            background: #e63946;
+            color: white;
+            padding: 12px 30px;
+            border: 3px solid #000000;
+            border-radius: 15px;
+            cursor: pointer;
+            font-weight: bold;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+            transition: all 0.3s ease;
+        }
+
+        .btn-back:hover {
+            background: #ffd600;
+            color: #000000;
+            transform: scale(1.05);
+            border-color: #000000;
+        }
+
+        @media (max-width: 1200px) {
+            .users-grid {
+                grid-template-columns: 1fr;
+                gap: 60px;
+            }
+
+            .decisions-top,
+            .decisions-bottom {
+                gap: 60px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8rem;
+            }
+
+            .branches,
+            .sub-branches {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+
+            .decisions-top,
+            .decisions-bottom {
+                gap: 40px;
+            }
+
+            .flow-box {
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>FLUJO DE INTERACCIÓN</h1>
+        </div>
+
+        <div class="users-grid">
+            <!-- DERECK -->
+            <div class="user-section">
+                <h2 class="user-name">DERECK</h2>
+                <div class="user-marker"></div>
+                
+                <div class="flow-box">
+                    <p>Ingresa al sitio web.</p>
+                </div>
+
+                <div class="decisions-top">
+                    <div class="decision-btn">SI</div>
+                    <div class="decision-btn">NO</div>
+                </div>
+
+                <div class="branches">
+                    <!-- NO branch -->
+                    <div class="branch">
+                        <div class="arrow"></div>
+                        <div class="flow-box">
+                            <p>Hace click en Explorar Productos.</p>
+                        </div>
+                        <div class="arrow"></div>
+                        <div class="single-btn">
+                            <div class="decision-btn">SI</div>
+                        </div>
+                        <div class="arrow"></div>
+                        <div class="flow-box">
+                            <p>Hace click en las diferentes Categorías de Productos.</p>
+                        </div>
+                        
+                        <div class="decisions-bottom">
+                            <div class="decision-btn">NO</div>
+                            <div class="decision-btn">SI</div>
+                        </div>
+
+                        <div class="sub-branches">
+                            <div class="sub-branch">
+                                <div class="arrow"></div>
+                                <div class="flow-box">
+                                    <p>Se queda viendo los productos y sus categorías.</p>
+                                </div>
+                            </div>
+                            <div class="sub-branch">
+                                <div class="arrow"></div>
+                                <div class="flow-box">
+                                    <p>Llena el carrito, envía sus datos y se le redirige a WhatsApp.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- SI branch -->
+                    <div class="branch">
+                        <div class="arrow"></div>
+                        <div class="flow-box">
+                            <p>Mira la portada de la página.</p>
+                        </div>
+                        <div class="single-btn">
+                            <div class="decision-btn">NO</div>
+                        </div>
+                        <div class="arrow"></div>
+                        <div class="flow-box">
+                            <p>Mira el menú para luego desplazarse por la página.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- EDGAR -->
+            <div class="user-section">
+                <h2 class="user-name">EDGAR</h2>
+                <div class="user-marker"></div>
+                
+                <div class="flow-box">
+                    <p>Ingresa al sitio web.</p>
+                </div>
+
+                <div class="decisions-top">
+                    <div class="decision-btn">SI</div>
+                    <div class="decision-btn">NO</div>
+                </div>
+
+                <div class="branches">
+                    <!-- NO branch -->
+                    <div class="branch">
+                        <div class="arrow"></div>
+                        <div class="flow-box">
+                            <p>Hace click en el botón de Explorar Productos.</p>
+                        </div>
+                        <div class="arrow"></div>
+                        <div class="single-btn">
+                            <div class="decision-btn">SI</div>
+                        </div>
+                        <div class="arrow"></div>
+                        <div class="flow-box">
+                            <p>Mira los productos y los añade al Carrito de Compras.</p>
+                        </div>
+                        
+                        <div class="decisions-bottom">
+                            <div class="decision-btn">NO</div>
+                            <div class="decision-btn">SI</div>
+                        </div>
+
+                        <div class="sub-branches">
+                            <div class="sub-branch">
+                                <div class="arrow"></div>
+                                <div class="flow-box">
+                                    <p>Continúa añadiendo y quitando productos.</p>
+                                </div>
+                            </div>
+                            <div class="sub-branch">
+                                <div class="arrow"></div>
+                                <div class="flow-box">
+                                    <p>Ingresa sus datos y se le redirige a WhatsApp.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- SI branch -->
+                    <div class="branch">
+                        <div class="arrow"></div>
+                        <div class="flow-box">
+                            <p>Mira la barra de navegación y sus secciones.</p>
+                        </div>
+                        <div class="single-btn">
+                            <div class="decision-btn">NO</div>
+                        </div>
+                        <div class="arrow"></div>
+                        <div class="flow-box">
+                            <p>Mira los productos y continúa navegando por la página web.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="back-button">
+            <button class="btn-back" onclick="window.history.back()">Volver al Panel</button>
+        </div>
+    </div>
+</body>
+</html>

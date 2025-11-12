@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mapa del Sitio</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #f5f5f5;
+            font-family: 'Arial', sans-serif;
+            padding: 20px;
+            overflow-x: auto;
+        }
+
+        .mapa-container {
+            min-width: 1200px;
+            padding: 40px;
+            position: relative;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            letter-spacing: 5px;
+            text-transform: uppercase;
+        }
+
+        .menu-bar {
+            background-color: #ffcc00;
+            padding: 10px;
+            text-align: right;
+            margin-bottom: 40px;
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+
+        /* Nodo principal */
+        .nodo {
+            background-color: #000;
+            color: #fff;
+            padding: 20px 30px;
+            text-align: center;
+            font-weight: bold;
+            border: 3px solid #000;
+            position: relative;
+            display: inline-block;
+            min-width: 200px;
+        }
+
+        .nodo-principal {
+            margin: 0 auto 20px;
+            display: block;
+            width: fit-content;
+        }
+
+        .descripcion-central {
+            text-align: center;
+            max-width: 500px;
+            margin: 20px auto;
+            font-size: 0.85em;
+            padding: 10px;
+            background-color: #fff;
+            border: 2px solid #ccc;
+        }
+
+        /* Contenedor del mapa */
+        .nivel-principal {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 60px;
+            position: relative;
+        }
+
+        /* Ramas principales */
+        .rama {
+            flex: 1;
+            margin: 0 20px;
+            position: relative;
+        }
+
+        .rama-header {
+            background-color: #000;
+            color: #fff;
+            padding: 15px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 1.1em;
+            border: 3px solid #000;
+            margin-bottom: 30px;
+        }
+
+        /* Sub-nodos */
+        .sub-nodo {
+            background-color: #fff;
+            border: 3px solid #000;
+            padding: 15px;
+            margin: 15px 0;
+            position: relative;
+        }
+
+        .sub-nodo-titulo {
+            font-weight: bold;
+            font-size: 1em;
+            margin-bottom: 8px;
+            color: #000;
+            border-bottom: 2px solid #ffcc00;
+            padding-bottom: 5px;
+        }
+
+        .sub-nodo-contenido {
+            font-size: 0.85em;
+            line-height: 1.5;
+            color: #333;
+        }
+
+        /* Conectores visuales */
+        .conector-vertical {
+            width: 3px;
+            height: 40px;
+            background-color: #000;
+            margin: 0 auto;
+        }
+
+        .conector-horizontal {
+            height: 3px;
+            background-color: #000;
+            position: absolute;
+            top: -40px;
+            left: 50%;
+            right: 50%;
+        }
+
+        /* Lista de categorías */
+        .categoria-item {
+            display: flex;
+            align-items: center;
+            margin: 10px 0;
+            padding: 8px;
+            background-color: #f9f9f9;
+            border-left: 4px solid #ffcc00;
+        }
+
+        .categoria-nombre {
+            font-weight: bold;
+            min-width: 120px;
+            color: #000;
+        }
+
+        .flecha {
+            margin: 0 10px;
+            color: #ff0000;
+            font-size: 1.2em;
+        }
+
+        .categoria-desc {
+            font-size: 0.85em;
+            color: #555;
+        }
+
+        /* Iconos de contacto */
+        .contacto-lista {
+            list-style: none;
+        }
+
+        .contacto-item {
+            display: flex;
+            align-items: center;
+            margin: 12px 0;
+            font-size: 0.85em;
+        }
+
+        .icono {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+            font-size: 1.1em;
+            flex-shrink: 0;
+        }
+
+        .icono-rojo { background-color: #ff0000; color: #fff; }
+        .icono-amarillo { background-color: #ffcc00; color: #000; }
+        .icono-azul { background-color: #0066cc; color: #fff; }
+
+        /* Sección inferior */
+        .nivel-inferior {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-top: 60px;
+            position: relative;
+        }
+
+        .nodo-inferior {
+            background-color: #000;
+            color: #fff;
+            padding: 20px 40px;
+            text-align: center;
+            font-weight: bold;
+            border: 3px solid #000;
+            min-width: 200px;
+        }
+
+        .detalle-inferior {
+            background-color: #fff;
+            border: 3px solid #000;
+            padding: 15px;
+            margin-top: 20px;
+            font-size: 0.9em;
+        }
+
+        /* Líneas conectoras */
+        .linea-conectora {
+            position: absolute;
+            background-color: #000;
+        }
+
+        .linea-vertical-centro {
+            width: 3px;
+            height: 60px;
+            left: 50%;
+            top: -60px;
+            margin-left: -1.5px;
+        }
+
+        /* Botón volver */
+        .boton-volver {
+            display: block;
+            margin: 60px auto 20px;
+            padding: 15px 40px;
+            background-color: #ffcc00;
+            color: #000;
+            border: 3px solid #000;
+            font-weight: bold;
+            font-size: 1.1em;
+            cursor: pointer;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+            text-align: center;
+            max-width: 300px;
+        }
+
+        .boton-volver:hover {
+            background-color: #ff0000;
+            color: #fff;
+            transform: scale(1.05);
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .nivel-principal {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .rama {
+                max-width: 600px;
+                margin: 30px 0;
+            }
+
+            .nivel-inferior {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="mapa-container">
+        <h1>MAPA del SITIO</h1>
+        
+        <div class="menu-bar">
+            Mapa | Accesorios | Decoración | Coleccionables
+        </div>
+
+        <!-- Nodo Principal -->
+        <div class="nodo nodo-principal">
+            PÁGINA PRINCIPAL
+        </div>
+
+        <div class="conector-vertical"></div>
+
+        <div class="descripcion-central">
+            Descubre los productos más tiernos y divertidos inspirados en el beagle más famoso del mundo.
+        </div>
+
+        <div class="conector-vertical"></div>
+
+        <!-- Nivel Principal: 3 Ramas -->
+        <div class="nivel-principal">
+            <!-- RAMA 1: PRODUCTOS -->
+            <div class="rama">
+                <div class="conector-vertical"></div>
+                <div class="rama-header">PRODUCTOS</div>
+                
+                <div class="sub-nodo">
+                    <div class="sub-nodo-titulo">SEPARADO POR TEMÁTICAS</div>
+                    <div class="sub-nodo-contenido">
+                        <div class="categoria-item">
+                            <span class="categoria-nombre">ROPA</span>
+                            <span class="flecha">→</span>
+                            <span class="categoria-desc">playeras, pantalones, pijamas, etc.</span>
+                        </div>
+                        <div class="categoria-item">
+                            <span class="categoria-nombre">ACCESORIAS</span>
+                            <span class="flecha">→</span>
+                            <span class="categoria-desc">collares, braseletes, aretes, etc.</span>
+                        </div>
+                        <div class="categoria-item">
+                            <span class="categoria-nombre">DECORACIÓN</span>
+                            <span class="flecha">→</span>
+                            <span class="categoria-desc">de todo para el hogar.</span>
+                        </div>
+                        <div class="categoria-item">
+                            <span class="categoria-nombre">OSOS</span>
+                            <span class="flecha">→</span>
+                            <span class="categoria-desc">todos los personajes de Snoopy.</span>
+                        </div>
+                        <div class="categoria-item">
+                            <span class="categoria-nombre">COLECCIÓN</span>
+                            <span class="flecha">→</span>
+                            <span class="categoria-desc">figuras coleccionables.</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RAMA 2: NOSOTROS -->
+            <div class="rama">
+                <div class="conector-vertical"></div>
+                <div class="rama-header">NOSOTROS</div>
+                
+                <div class="sub-nodo">
+                    <div class="sub-nodo-contenido">
+                        Snoopy Store Bolivia nació con el objetivo de satisfacer la necesidad de Fomentar productos originales y de calidad inspirados en Snoopy y sus amigos. Somos una empresa dedicada a la venta de artículos de moda, accesorios, decoración y coleccionables, siempre que el sello de autenticidad que caracteriza a esta querida marca.
+                    </div>
+                </div>
+
+                <div class="conector-vertical" style="height: 20px;"></div>
+
+                <div class="sub-nodo" style="background-color: #ffcc00; border-color: #000;">
+                    <div class="sub-nodo-titulo" style="border-color: #000;">MISIÓN VISIÓN</div>
+                </div>
+            </div>
+
+            <!-- RAMA 3: CONTÁCTANOS -->
+            <div class="rama">
+                <div class="conector-vertical"></div>
+                <div class="rama-header">CONTÁCTANOS</div>
+                
+                <div class="sub-nodo">
+                    <ul class="contacto-lista">
+                        <li class="contacto-item">
+                            <div class="icono icono-rojo">📍</div>
+                            <span><strong>Dirección:</strong> Av. Principal #123, Santa Cruz, Bolivia</span>
+                        </li>
+                        <li class="contacto-item">
+                            <div class="icono icono-rojo">📞</div>
+                            <span><strong>Teléfono:</strong> +591 700 00000</span>
+                        </li>
+                        <li class="contacto-item">
+                            <div class="icono icono-amarillo">✉</div>
+                            <span><strong>Correo:</strong> contacto@snoopystore.com</span>
+                        </li>
+                        <li class="contacto-item">
+                            <div class="icono icono-amarillo">⏰</div>
+                            <span><strong>Horario:</strong> Lunes a Sábado - 9:00 a.m. a 8:00 p.m.</span>
+                        </li>
+                        <li class="contacto-item">
+                            <div class="icono icono-azul">🌐</div>
+                            <span><strong>Redes sociales:</strong><br>
+                            Facebook: @snoopystore<br>
+                            Instagram: @snoopystore_bo</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Nivel Inferior -->
+        <div class="conector-vertical" style="height: 60px;"></div>
+
+        <div class="nivel-inferior">
+            <!-- Carrito -->
+            <div style="position: relative;">
+                <div class="nodo-inferior">
+                    CARRITO DE<br>COMPRA
+                </div>
+                <div class="detalle-inferior">
+                    Se implementará el poder incluir y reducir tu pedido y una sección a te pide tus datos para realizar tu pedido.
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div style="position: relative;">
+                <div class="nodo-inferior">
+                    FOOTER
+                </div>
+                <div class="detalle-inferior">
+                    Políticas de Privacidad y Derechos de Autor.
+                </div>
+            </div>
+        </div>
+
+        <!-- Botón Volver -->
+        <button class="boton-volver" onclick="window.location.href='index.html'">
+            Volver al Panel
+        </button>
+    </div>
+</body>
+</html>

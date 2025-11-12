@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wireframes - Snoopy Store</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 2.5em;
+            margin-bottom: 60px;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: #000;
+        }
+
+        .wireframe {
+            background-color: #fff;
+            margin-bottom: 80px;
+            padding: 40px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border-radius: 10px;
+        }
+
+        .wireframe-title {
+            font-size: 1.8em;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 4px solid #ffcc00;
+            color: #000;
+            font-weight: bold;
+        }
+
+        .wireframe-image {
+            width: 100%;
+            height: auto;
+            border: 2px solid #e0e0e0;
+            border-radius: 5px;
+            display: block;
+        }
+
+        /* Botón volver */
+        .boton-volver {
+            display: block;
+            margin: 0 auto 40px;
+            padding: 15px 40px;
+            background-color: #ffcc00;
+            color: #000;
+            border: 3px solid #000;
+            font-weight: bold;
+            font-size: 1.1em;
+            cursor: pointer;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+            text-align: center;
+            max-width: 300px;
+            border-radius: 50px;
+        }
+
+        .boton-volver:hover {
+            background-color: #ff0000;
+            color: #fff;
+            transform: scale(1.05);
+        }
+
+        /* Sección móvil */
+        .seccion-movil {
+            margin-top: 100px;
+            padding-top: 60px;
+            border-top: 5px solid #000;
+        }
+
+        .seccion-movil h1 {
+            margin-bottom: 60px;
+        }
+
+        .wireframe-movil {
+            background-color: #fff;
+            margin-bottom: 80px;
+            padding: 40px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border-radius: 10px;
+        }
+
+        .wireframe-movil-title {
+            font-size: 1.8em;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 4px solid #ffcc00;
+            color: #000;
+            font-weight: bold;
+        }
+
+        .wireframe-movil-image {
+            width: 100%;
+            max-width: 400px;
+            height: auto;
+            border: 2px solid #e0e0e0;
+            border-radius: 5px;
+            display: block;
+            margin: 0 auto;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.8em;
+            }
+
+            .wireframe {
+                padding: 20px;
+            }
+
+            .wireframe-title {
+                font-size: 1.3em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Botón Volver -->
+        <button class="boton-volver" onclick="window.location.href='index.html'">
+            Volver a Página de Inicio
+        </button>
+
+        <h1>Wireframes Versión Escritorio</h1>
+
+        <!-- Wireframe 1: Página Principal -->
+        <div class="wireframe">
+            <h2 class="wireframe-title">1. Página Principal</h2>
+            <img src="https://i.pinimg.com/736x/c6/60/52/c660526cae7e4c0e851b750e1ca562a8.jpg" alt="Wireframe Página Principal" class="wireframe-image">
+        </div>
+
+        <!-- Wireframe 2: Sobre Nosotros -->
+        <div class="wireframe">
+            <h2 class="wireframe-title">2. Sobre Nosotros</h2>
+            <img src="https://i.pinimg.com/736x/db/7c/0e/db7c0ea86e6485313cb90c7b64ef45a4.jpg" alt="Wireframe Sobre Nosotros" class="wireframe-image">
+        </div>
+
+        <!-- Wireframe 3: Nuestros Productos -->
+        <div class="wireframe">
+            <h2 class="wireframe-title">3. Nuestros Productos</h2>
+            <img src="https://i.pinimg.com/736x/52/02/35/5202359d5d8e4ead36c43365bf80313f.jpg" alt="Wireframe Nuestros Productos" class="wireframe-image">
+        </div>
+
+        <!-- Wireframe 4: Detalle de Producto -->
+        <div class="wireframe">
+            <h2 class="wireframe-title">4. Detalle de Producto (Modal)</h2>
+            <img src="https://i.pinimg.com/736x/df/8b/50/df8b5014e3b50f46b60633775beaee35.jpg" alt="Wireframe Detalle de Producto" class="wireframe-image">
+        </div>
+
+        <!-- Wireframe 5: Generar Factura -->
+        <div class="wireframe">
+            <h2 class="wireframe-title">5. Generar Factura</h2>
+            <img src="https://i.pinimg.com/736x/40/0a/87/400a87811c4749986ef803bfd3661657.jpg" alt="Wireframe Generar Factura" class="wireframe-image">
+        </div>
+
+        <!-- Wireframe 6: Contáctanos -->
+        <div class="wireframe">
+            <h2 class="wireframe-title">6. Contáctanos</h2>
+            <img src="https://i.pinimg.com/736x/2a/4c/51/2a4c51f49bb7ef2b83d7b734863f1060.jpg" alt="Wireframe Contáctanos" class="wireframe-image">
+        </div>
+
+        <!-- Sección Wireframes Móvil -->
+        <div class="seccion-movil">
+            <h1>Wireframes Versión para Móvil</h1>
+
+            <!-- Wireframe Móvil 1: Página Principal -->
+            <div class="wireframe-movil">
+                <h2 class="wireframe-movil-title">1. Página Principal (Móvil)</h2>
+                <img src="https://i.pinimg.com/736x/9d/b3/95/9db395d5c73a12112083a57199d5cec0.jpg" alt="Wireframe Móvil Página Principal" class="wireframe-movil-image">
+            </div>
+
+            <!-- Wireframe Móvil 2: Nuestros Productos -->
+            <div class="wireframe-movil">
+                <h2 class="wireframe-movil-title">2. Nuestros Productos (Móvil)</h2>
+                <img src="https://i.pinimg.com/736x/c0/6d/e8/c06de88d0f0595aa264b0d432405cc4a.jpg" alt="Wireframe Móvil Nuestros Productos" class="wireframe-movil-image">
+            </div>
+
+            <!-- Wireframe Móvil 3: Generar Factura -->
+            <div class="wireframe-movil">
+                <h2 class="wireframe-movil-title">3. Generar Factura (Móvil)</h2>
+                <img src="https://i.pinimg.com/736x/73/bc/37/73bc376d3b2bfa06256f63c12ce23b13.jpg" alt="Wireframe Móvil Generar Factura" class="wireframe-movil-image">
+            </div>
+
+            <!-- Wireframe Móvil 4: Contáctanos -->
+            <div class="wireframe-movil">
+                <h2 class="wireframe-movil-title">4. Contáctanos (Móvil)</h2>
+                <img src="https://i.pinimg.com/736x/63/75/ca/6375ca67d84fff7d7ae3f64d73e90ee0.jpg" alt="Wireframe Móvil Contáctanos" class="wireframe-movil-image">
+            </div>
+
+
+            <!-- Wireframe Móvil 6: Página Adicional -->
+            <div class="wireframe-movil">
+                <h2 class="wireframe-movil-title">6. Página Adicional (Móvil)</h2>
+                <img src="https://i.pinimg.com/736x/7a/85/55/7a85550724f25b6e237b9d6341d9c9ea.jpg" alt="Wireframe Móvil Página Adicional" class="wireframe-movil-image">
+            </div>
+        </div>
+    </div>
+</body>
+</html>

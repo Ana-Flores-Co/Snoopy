@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Persona - Snoopy Store Bolivia</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Arial', sans-serif; background: #e8eef3; min-height: 100vh; padding: 40px 20px; position: relative; overflow-x: hidden; }
+        body::before, body::after { content: ''; position: fixed; width: 300px; height: 300px; background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><path d="M100,50 Q120,70 100,90 Q80,70 100,50" fill="none" stroke="%23ffd600" stroke-width="2" opacity="0.2"/><path d="M100,50 Q120,30 140,50 Q120,70 100,50" fill="none" stroke="%23ffd600" stroke-width="2" opacity="0.2"/></svg>'); background-repeat: no-repeat; opacity: 0.3; pointer-events: none; }
+        body::before { top: -50px; left: -50px; }
+        body::after { bottom: -50px; right: -50px; }
+        .container { max-width: 1200px; margin: 0 auto; position: relative; z-index: 1; }
+        .persona-card { background: white; border-radius: 20px; padding: 40px; box-shadow: 0 8px 25px rgba(0,0,0,0.15); margin-bottom: 40px; border: 3px solid #ffd600; }
+        .persona-header { background: #ffd600; color: #000; padding: 12px 25px; border-radius: 50px; display: inline-block; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; font-size: 0.9rem; margin-bottom: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .persona-grid { display: grid; grid-template-columns: 1fr 2fr 1.5fr; gap: 30px; align-items: start; }
+        .persona-photo { width: 140px; height: 140px; border-radius: 50%; overflow: hidden; border: 5px solid #ffd600; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
+        .persona-photo img { width: 100%; height: 100%; object-fit: cover; }
+        .persona-name { font-size: 2rem; font-weight: bold; color: #e63946; margin-bottom: 8px; }
+        .persona-info { color: #000; font-size: 1rem; line-height: 1.6; }
+        .persona-info strong { color: #e63946; }
+        .section-title { font-size: 1.4rem; font-weight: bold; color: #e63946; margin: 20px 0 12px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .bullet-list { list-style: none; }
+        .bullet-list li { position: relative; padding-left: 28px; margin-bottom: 10px; font-size: 0.95rem; color: #333; }
+        .bullet-list li::before { content: ''; position: absolute; left: 0; top: 4px; width: 14px; height: 14px; background: #ffd600; border: 2px solid #e63946; border-radius: 50%; }
+        .device-usage { display: flex; gap: 20px; margin-top: 15px; font-size: 0.9rem; }
+        .device { display: flex; align-items: center; gap: 8px; }
+        .device-dots { display: flex; gap: 5px; }
+        .dot { width: 10px; height: 10px; background: #ffd600; border-radius: 50%; border: 2px solid #e63946; }
+        .dot.empty { background: transparent; }
+        
+        @media (max-width: 992px) { .persona-grid { grid-template-columns: 1fr; text-align: center; } .persona-photo { margin: 0 auto; } .device-usage { justify-content: center; } }
+
+        .back-button {
+  text-align: right;
+  margin-top: 40px;
+}
+
+.btn-back {
+  background: #e63946;
+  color: white;
+  padding: 12px 30px;
+  border: 3px solid #000000;
+  border-radius: 15px;
+  cursor: pointer;
+  font-weight: bold;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  letter-spacing: 0.5px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+  transition: all 0.3s ease;
+  margin: 20px;
+}
+
+.btn-back:hover {
+  background: #ffd600;
+  color: #000000;
+  transform: scale(1.05);
+  border-color: #000000;
+}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- PERSONA 1: DERECK BUSTAMANTE -->
+        <div class="persona-card">
+            <div class="persona-header">USER PERSONA - SNOOPY STORE</div>
+            <div class="persona-grid">
+                <div><div class="persona-photo"><img src="https://i.pravatar.cc/150?img=68" alt="Dereck Bustamante"></div></div>
+                <div>
+                    <h2 class="persona-name">DERECK BUSTAMANTE</h2>
+                    <p class="persona-info">
+                        <strong>EDAD:</strong> 24 años<br>
+                        <strong>COCHABAMBA, BOLIVIA</strong><br>
+                        <strong>ESTUDIANTE UNIVERSITARIO</strong>
+                    </p>
+                    <h3 class="section-title">SOBRE DERECK</h3>
+                    <p class="persona-info">
+                        Dereck es un joven apasionado por Snoopy desde niño. Colecciona figuras y accesorios del beagle más famoso. 
+                        Busca productos originales y de calidad para regalar o ampliar su colección. 
+                        Navega desde su celular en breaks de la universidad.
+                    </p>
+                </div>
+                <div>
+                    <h3 class="section-title">NECESIDADES Y DESEOS</h3>
+                    <ul class="bullet-list">
+                        <li>Ver fotos reales y detalladas de productos</li>
+                        <li>Filtrar por categorías (ropa, osos, decoración)</li>
+                        <li>Confirmación rápida vía WhatsApp</li>
+                        <li>Precios visibles y actualizados</li>
+                    </ul>
+                    <h3 class="section-title">OBJETIVOS</h3>
+                    <ul class="bullet-list">
+                        <li>Encontrar productos exclusivos</li>
+                        <li>Comprar sin salir de la app móvil</li>
+                        <li>Recibir notificaciones de ofertas</li>
+                    </ul>
+                    <h3 class="section-title">FRUSTRACIONES</h3>
+                    <ul class="bullet-list">
+                        <li>Fotos borrosas o falsas</li>
+                        <li>Carrito que se vacía</li>
+                        <li>Respuesta lenta en WhatsApp</li>
+                    </ul>
+                    <div class="device-usage">
+                        <div class="device"><span>Smartphone</span><div class="device-dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div></div></div>
+                        <div class="device"><span>Escritorio</span><div class="device-dots"><div class="dot"></div><div class="dot empty"></div><div class="dot empty"></div><div class="dot empty"></div></div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PERSONA 2: EDGAR CHOQUE -->
+        <div class="persona-card">
+            <div class="persona-grid">
+                <div><div class="persona-photo"><img src="https://i.pravatar.cc/150?img=12" alt="Edgar"></div></div>
+                <div>
+                    <h2 class="persona-name">EDGAR CHOQUE</h2>
+                    <p class="persona-info">
+                        <strong>EDAD:</strong> 19 años<br>
+                        <strong>COCHABAMBA, BOLIVIA</strong><br>
+                        <strong>ESTUDIANTE SECUNDARIA</strong>
+                    </p>
+                    <h3 class="section-title">SOBRE EDGAR</h3>
+                    <p class="persona-info">
+                        Edgar es fan de Snoopy por las caricaturas. Quiere ropa y accesorios para personalizar su estilo. 
+                        Comparte con amigos en redes y busca ofertas. Usa el celular todo el día.
+                    </p>
+                </div>
+                <div>
+                    <h3 class="section-title">NECESIDADES Y DESEOS</h3>
+                    <ul class="bullet-list">
+                        <li>Ver tallas disponibles</li>
+                        <li>Promociones y combos</li>
+                        <li>Envío a domicilio rápido</li>
+                        <li>Fácil pago por QR o transferencia</li>
+                    </ul>
+                    <h3 class="section-title">OBJETIVOS</h3>
+                    <ul class="bullet-list">
+                        <li>Comprar regalo para amigo</li>
+                        <li>Seguir la tienda en redes</li>
+                        <li>Recibir el pedido en 24h</li>
+                    </ul>
+                    <h3 class="section-title">FRUSTRACIONES</h3>
+                    <ul class="bullet-list">
+                        <li>No hay tallas de su edad</li>
+                        <li>El botón de WhatsApp no abre</li>
+                        <li>Precios cambian al contactar</li>
+                    </ul>
+                    <div class="device-usage">
+                        <div class="device"><span>Smartphone</span><div class="device-dots"><div class="dot"></div><div class="dot"></ and more..."></div><div class="dot"></div><div class="dot"></div><div class="dot"></div></div></div>
+                        <div class="device"><span>Escritorio</span><div class="device-dots"><div class="dot empty"></div><div class="dot empty"></div><div class="dot empty"></div><div class="dot empty"></div></div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+<div class="back-button">
+    <button class="btn-back" onclick="window.history.back()">Volver al Panel</button>
+</div>
+    </div>
+</body>
+</html>

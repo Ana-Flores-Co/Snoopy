@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Snoopy - Guía de Marca</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background: linear-gradient(135deg, #f5f5f5 0%, #e0e0e0 100%);
+            padding: 40px 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .card {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 8px;
+            background: linear-gradient(90deg, #000 0%, #fdf203 50%, #E60808 100%);
+        }
+
+        .section-box {
+            background: white;
+            border: 3px solid #000;
+            padding: 30px;
+            margin-bottom: 30px;
+            border-radius: 10px;
+        }
+
+        .section-title {
+            background: #000;
+            color: white;
+            padding: 15px 30px;
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            letter-spacing: 4px;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+
+        .logo-display {
+            text-align: center;
+            padding: 20px;
+        }
+
+        .logo-image {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 0 auto;
+        }
+
+        .logo-placeholder {
+            width: 300px;
+            height: 150px;
+            background: #f0f0f0;
+            border: 2px dashed #999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+            color: #666;
+            font-size: 14px;
+            border-radius: 8px;
+        }
+
+        .colors-section {
+            background: white;
+            border: 3px solid #000;
+            padding: 30px;
+            margin-bottom: 30px;
+            border-radius: 10px;
+        }
+
+        .colors-title {
+            background: #000;
+            color: white;
+            padding: 12px 20px;
+            text-align: center;
+            font-size: 20px;
+            letter-spacing: 3px;
+            margin-bottom: 25px;
+        }
+
+        .color-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+        }
+
+        .color-group h3 {
+            font-size: 28px;
+            margin-bottom: 15px;
+            color: #000;
+        }
+
+        .color-palette {
+            display: flex;
+            gap: 15px;
+        }
+
+        .color-box {
+            width: 100px;
+            height: 100px;
+            border-radius: 8px;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            padding: 10px;
+            font-size: 12px;
+            font-weight: bold;
+            color: white;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .info-label {
+            background: #000;
+            color: white;
+            padding: 12px 20px;
+            font-size: 18px;
+            letter-spacing: 3px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .info-content {
+            font-size: 18px;
+            line-height: 1.8;
+            color: #333;
+        }
+
+        .typo-name {
+            font-size: 20px;
+            margin-bottom: 10px;
+            color: #666;
+        }
+
+        .typo-display {
+            font-size: 48px;
+            font-weight: bold;
+            color: #000;
+        }
+
+        .button-container {
+            text-align: center;
+            margin-top: 50px;
+            padding: 20px;
+        }
+
+        .btn-home {
+            background: #fdf203;
+            color: #000;
+            padding: 18px 50px;
+            font-size: 20px;
+            font-weight: bold;
+            border: 3px solid #000;
+            border-radius: 10px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+        }
+
+        .btn-home:hover {
+            background: #E60808;
+            color: white;
+            border-color: #000;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+            
+            .card {
+                padding: 25px;
+            }
+            
+            .section-box,
+            .colors-section {
+                padding: 20px;
+            }
+            
+            .color-box {
+                width: 80px;
+                height: 80px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Primera Hoja -->
+        <div class="card">
+            <div class="section-box">
+                <div class="section-title">NOMBRE</div>
+                <div class="logo-display">
+                    <div style="font-size: 32px; font-weight: bold; color: #000;">Snoopy</div>
+                </div>
+            </div>
+
+            <div class="section-box">
+                <div class="section-title">LOGO</div>
+                <div class="logo-display">
+                    <img src="https://i.pinimg.com/736x/a2/d9/b2/a2d9b28e813593f4512148ab277c9685.jpg" alt="Logo Snoopy" class="logo-image">
+                    <!-- Reemplaza el link de arriba con el URL de tu imagen -->
+                </div>
+            </div>
+
+            <div class="colors-section">
+                <div class="colors-title">Paleta de Colores</div>
+                <div class="color-grid">
+                    <div class="color-group">
+                        <h3>Principal</h3>
+                        <div class="color-palette">
+                            <div class="color-box" style="background: #0b0a0a; color: white;">#0b0a0a</div>
+                            <div class="color-box" style="background: #fbf9f9; color: black;">#fbf9f9</div>
+                        </div>
+                    </div>
+                    <div class="color-group">
+                        <h3>Secundaria</h3>
+                        <div class="color-palette">
+                            <div class="color-box" style="background: #fdf203;">#fdf203</div>
+                            <div class="color-box" style="background: #E60808;">#E60808</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Segunda Hoja -->
+        <div class="card">
+            <div class="section-box">
+                <div class="info-label">TIPOGRAFÍA</div>
+                <div class="typo-name">Snoopy</div>
+                <div class="typo-display">Snoopy</div>
+            </div>
+
+            <div class="section-box">
+                <div class="info-label">ESTILO</div>
+                <div class="info-content">
+                    <strong>Simplista y minimalista.</strong>
+                </div>
+            </div>
+
+            <div class="section-box">
+                <div class="info-label">OBJETIVO</div>
+                <div class="info-content">
+                    Poder tener una opción de comercio virtual web, garantizando una experiencia fácil de navegación y entendible para el usuario, sin complicaciones con los ingresos a distintas secciones y sobre todo entendible.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="button-container">
+        <a href="index.html" class="btn-home">Volver al Panel</a>
+    </div>
+</body>
+</html>

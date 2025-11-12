@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Prototipo Móvil - Snoopy Store Bolivia</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+:root{
+  --blanco:#ffffff;
+  --amarillo:#ffd600;
+  --negro:#000000;
+  --rojo:#ff0000;
+  --gris:#f2f2f2;
+}
+html,body{height:100%;margin:0;padding:0;background:var(--gris);font-family:'Poppins',sans-serif;}
+/* mockup bg con espacio superior e inferior */
+.mockup-bg{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:24px 20px; /* espacio superior e inferior pedido */
+  min-height:100vh;
+  box-sizing:border-box;
+}
+/* marco móvil ajustado para caber en pantalla */
+.mobile-frame{
+  width:390px;
+  aspect-ratio:9/16;
+  max-width:100%; /* deja espacio por padding del mockup-bg */
+  border-radius:30px;
+  background:#fff;
+  box-shadow:0 20px 60px rgba(0,0,0,0.35);
+  position:relative;
+  overflow:hidden;
+  display:flex;
+  flex-direction:column;
+  border:8px solid #111;
+}
+/* notch */
+.mobile-frame::before{
+  content:'';
+  position:absolute;
+  top:8px;
+  left:50%;
+  transform:translateX(-50%);
+  width:140px;
+  height:24px;
+  background:#0a0a0a;
+  border-radius:14px;
+  z-index:30;
+}
+/* viewport app */
+.mobile-viewport{
+  flex:1;
+  overflow-y:auto;
+  -webkit-overflow-scrolling:touch;
+  background:transparent;
+  padding-bottom:0px;
+}
+.mobile-viewport::-webkit-scrollbar{display:none;}
+
+/* header: marca arriba, menu compacto debajo */
+header{
+  background:var(--amarillo);
+  padding:12px 14px;
+  position:sticky;
+  top:0;
+  z-index:1000;
+  box-shadow:0 2px 8px rgba(0,0,0,0.08);
+}
+.header-top{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+.logo{font-weight:800;font-size:1.05em;cursor:pointer;}
+.carrito-icono{background:var(--negro);color:var(--blanco);padding:6px 10px;border-radius:16px;cursor:pointer;font-size:0.95em;}
+.menu-row{display:flex;align-items:center;justify-content:space-between;margin-top:8px;}
+.menu-toggle{background:none;border:0;font-size:1.1em;cursor:pointer;padding:6px 8px;border-radius:8px;}
+nav{display:none;flex-direction:row;gap:10px;overflow:hidden;align-items:center;}
+nav a{color:var(--negro);text-decoration:none;font-weight:600;font-size:0.9em;padding:6px 8px;border-radius:8px;}
+nav.active{display:flex;}
+
+/* secciones */
+section{padding:18px;}
+#portada{text-align:center;padding-top:10px;}
+#portada h1{font-size:1.3em;margin:8px 0;}
+#portada p{max-width:300px;margin:0 auto 12px;font-size:0.95em;color:#222;}
+
+/* categorias: verticales (uno debajo del otro) */
+.categorias{display:flex;flex-direction:column;gap:10px;margin-bottom:12px;padding:6px 0;}
+.categoria-btn{padding:10px;background:var(--amarillo);border:2px solid var(--negro);border-radius:12px;font-weight:700;cursor:pointer;text-align:left;}
+.categoria-btn.active{background:var(--rojo);color:var(--blanco);}
+
+/* productos: horizontal scroll controlado por flechas */
+.productos-wrapper{position:relative;}
+.productos-grid{display:flex;gap:14px;overflow:hidden;scroll-behavior:smooth;padding:6px 6px;}
+.producto-card{background:var(--blanco);border-radius:14px;padding:12px;box-shadow:0 6px 16px rgba(0,0,0,0.08);min-width:260px;flex:0 0 auto;}
+.producto-card img{width:100%;height:150px;object-fit:contain;border-radius:8px;}
+.producto-card h3{font-size:1em;margin:8px 0 6px;}
+.producto-card .precio{color:var(--rojo);font-weight:800;margin-bottom:8px;}
+
+/* flechas */
+.scroll-btn{position:absolute;top:50%;transform:translateY(-50%);background:rgba(0,0,0,0.6);color:#fff;border:none;border-radius:50%;width:40px;height:40px;cursor:pointer;z-index:20;display:flex;align-items:center;justify-content:center;}
+.scroll-left{left:6px;}
+.scroll-right{right:6px;}
+
+/* modal */
+.modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);z-index:4000;align-items:center;justify-content:center;padding:12px;}
+.modal.active{display:flex;}
+.modal-content{background:var(--blanco);border-radius:12px;padding:14px;max-width:360px;width:100%;max-height:86vh;overflow-y:auto;position:relative;}
+.modal-close{position:absolute;top:8px;right:8px;background:var(--rojo);color:#fff;width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:1.2em;}
+
+/* carrito sidebar (ajustado para dentro del mockup) */
+.carrito-sidebar{position:absolute;right:-100%;top:0;width:100%;height:100%;background:var(--blanco);box-shadow:-5px 0 15px rgba(0,0,0,0.3);z-index:3000;transition:right .3s;padding:70px 3px 140px;overflow-y:auto;visibility:hidden;display:flex;flex-direction:column;}
+.carrito-sidebar.active{right:0;visibility:visible;}
+.carrito-item{display:flex;gap:10px;padding:10px 8px;border-bottom:1px solid #f1f1f1;align-items:center;font-size:0.9em;}
+.carrito-item img{width:40px;height:40px;object-fit:contain;border-radius:6px;}
+.carrito-total{position:sticky;bottom:0;background:var(--amarillo);padding:14px;margin:12px -20px -20px;text-align:center;}
+
+/* formulario factura */
+form{display:flex;flex-direction:column;gap:10px;}
+input,textarea,select{padding:10px;border:2px solid var(--negro);border-radius:8px;font-size:0.95em;}
+
+/* footer */
+footer{margin-top:20px;padding:20px;text-align:center;background:#000;color:#fff;font-size:0.85em;border-bottom-left-radius:0px;border-bottom-right-radius:0px;flex-shrink:0;}
+
+/* utilidades */
+.btn{display:inline-block;background:var(--negro);color:var(--blanco);padding:10px 16px;border-radius:20px;text-decoration:none;font-weight:600;border:none;cursor:pointer;}
+@media (max-width:420px){
+  .mobile-frame{width:360px;height:calc(100vh - 48px);}
+  .producto-card{min-width:230px;}
+}
+
+.back-button {
+  text-align: right;
+  margin-top: 40px;
+}
+
+.btn-back {
+  background: #e63946;
+  color: white;
+  padding: 12px 30px;
+  border: 3px solid #000000;
+  border-radius: 15px;
+  cursor: pointer;
+  font-weight: bold;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  letter-spacing: 0.5px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+  transition: all 0.3s ease;
+  margin: 20px;
+}
+
+.btn-back:hover {
+  background: #ffd600;
+  color: #000000;
+  transform: scale(1.05);
+  border-color: #000000;
+}
+</style>
+</head>
+<body>
+<div class="mockup-bg">
+  <div class="mobile-frame" role="application" aria-label="Snoopy Store App Mockup">
+    <div class="mobile-viewport">
+
+      <!-- HEADER: marca arriba y menu compacto debajo -->
+      <header>
+        <div class="header-top">
+          <div class="logo" onclick="window.location.href='#portada'">🐾 Snoopy Store Bolivia</div>
+          <div class="carrito-icono" onclick="toggleCarrito()">🛒 <span id="carrito-count">0</span></div>
+        </div>
+        <div class="menu-row">
+          <button class="menu-toggle" onclick="document.querySelector('nav').classList.toggle('active')">☰</button>
+          <nav>
+            <a href="#portada">Inicio</a>
+            <a href="#proposito">Nosotros</a>
+            <a href="#productos">Productos</a>
+            <a href="#factura">Factura</a>
+            <a href="#contacto">Contacto</a>
+          </nav>
+        </div>
+      </header>
+
+      <!-- PORTADA -->
+      <section id="portada">
+        <h1>🐾 Snoopy Store Bolivia</h1>
+        <p>Descubre los productos más tiernos y divertidos inspirados en el beagle más famoso del mundo.</p>
+        <img src="https://i.pinimg.com/originals/fb/ce/4a/fbce4a7be83db92276518aceea77bc5a.gif" alt="Snoopy saludando" style="width:140px;border-radius:12px;">
+        <div style="margin-top:14px;text-align:center;">
+          <a class="btn" href="#productos" onclick="scrollToSection(event,'productos')">Explorar Productos</a>
+        </div>
+      </section>
+
+      <!-- NOSOTROS (restaurado) -->
+      <section id="proposito">
+        <h2>Sobre Nosotros</h2>
+        <div class="proposito-content" style="font-size:0.95em;line-height:1.5;color:#222;text-align: justify;">
+          <p>Snoopy Store Bolivia nació con el objetivo de acercar a todos los fanáticos de Peanuts productos originales y de calidad inspirados en Snoopy y sus amigos. Somos una empresa dedicada a la venta de artículos de moda, accesorios, decoración y coleccionables.</p>
+          <p style="margin-top:8px;">Cada producto es seleccionado cuidadosamente para garantizar la mejor calidad y hacer que cada compra sea una experiencia especial.</p>
+        </div>
+      </section>
+
+      <!-- PRODUCTOS: categorias verticales + productos horizontales con flechas -->
+      <section id="productos">
+        <h2 style="text-align:center;">Nuestros Productos</h2>
+
+        <div class="categorias" id="categorias-list">
+          <!-- botones generados dinamicamente -->
+        </div>
+
+        <div class="productos-wrapper">
+          <button class="scroll-btn scroll-left" onclick="scrollProductos(-1)">&#10094;</button>
+          <div class="productos-grid" id="productos-grid" aria-live="polite"></div>
+          <button class="scroll-btn scroll-right" onclick="scrollProductos(1)">&#10095;</button>
+        </div>
+      </section>
+
+      <!-- FACTURA (restaurado) -->
+      <section id="factura">
+        <h2>Generar Factura</h2>
+        <form onsubmit="generarFactura(event)">
+          <input type="text" id="nombre" placeholder="Nombre completo" required>
+          <input type="tel" id="celular" placeholder="Número de celular" required>
+          <input type="email" id="correo" placeholder="Correo electrónico" required>
+          <select id="departamento" required>
+            <option value="">Seleccione departamento</option>
+            <option value="Santa Cruz">Santa Cruz</option>
+            <option value="La Paz">La Paz</option>
+            <option value="Cochabamba">Cochabamba</option>
+            <option value="Oruro">Oruro</option>
+            <option value="Potosí">Potosí</option>
+            <option value="Chuquisaca">Chuquisaca</option>
+            <option value="Tarija">Tarija</option>
+            <option value="Beni">Beni</option>
+            <option value="Pando">Pando</option>
+          </select>
+          <input type="text" id="direccion" placeholder="Dirección completa" required>
+          <textarea id="comentario" rows="3" placeholder="Comentario o nota adicional"></textarea>
+          <button type="submit" class="btn">Generar Factura</button>
+        </form>
+      </section>
+
+      <!-- CONTACTO (restaurado) -->
+      <section id="contacto">
+        <h2>Contáctanos</h2>
+        <div class="contacto-info" style="font-size:0.95em;color:#222;">
+          <p>📍 <strong>Dirección:</strong> Av. Principal #123, Santa Cruz – Bolivia</p>
+          <p>📞 <strong>Teléfono:</strong> +591 700 00000</p>
+          <p>📧 <strong>Correo:</strong> contacto@snoopystore.com</p>
+          <p>🕒 <strong>Horarios:</strong> Lunes a Sábado – 9:00 am a 7:00 pm</p>
+        </div>
+      </section>
+
+      <footer>&copy; 2025 Snoopy Store Bolivia | Hecho con 💛</footer>
+      
+      <!-- MODAL DETALLE -->
+      <div class="modal" id="modal-producto">
+        <div class="modal-content">
+          <div class="modal-close" onclick="cerrarModal()">×</div>
+          <div class="modal-body" id="modal-body"></div>
+        </div>
+      </div>
+
+      <!-- CARRITO SIDEBAR -->
+      <div class="carrito-sidebar" id="carrito-sidebar" style="z-index:3000;">
+      <button onclick="toggleCarrito()" style="position:absolute;top:15px;right:15px;background:var(--rojo);color:var(--blanco);border:none;width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:1.2em;line-height:1;z-index:10;">×</button>
+      <h2 style="text-align:center;margin:16px 16px 16px 16px;font-size:1.3em;">Mi Carrito</h2>
+      <div id="carrito-items"></div>
+        <div class="carrito-total">
+          <h3>Total: <span id="total-precio">0</span> Bs</h3>
+          <button class="btn" onclick="document.querySelector('.carrito-sidebar').classList.remove('active'); scrollToSectionById('factura')">Ir a Factura</button>
+        </div>
+      </div>
+
+    </div> <!-- .mobile-viewport -->
+  </div> <!-- .mobile-frame -->
+</div> <!-- .mockup-bg -->
+
+<div class="back-button">
+    <button class="btn-back" onclick="window.history.back()">Volver al Panel</button>
+</div>
+
+<script>
+/* Mantengo las funciones y la lógica original (nombres sin cambiar) */
+/* Base de datos de productos - copiado íntegro */
+const productos = {
+  ROPA: [
+    { id: 1, nombre: 'Sudadera Snoopy Clásica', precio: 155, img: 'https://m.media-amazon.com/images/I/71y42Ji4B8L._UY1000_.jpg', desc: 'Sudadera de algodón premium con estampado de Snoopy en el pecho' },
+    { id: 2, nombre: 'Camiseta Peanuts Vintage', precio: 85, img: 'https://m.media-amazon.com/images/I/A12haIRSz6L._CLa%7C2140%2C2000%7C71hHcGtJs9L.png%7C0%2C0%2C2140.0%2C2000.0_AC_UY1000_.png', desc: 'Camiseta 100% algodón con diseño vintage de los personajes' },
+    { id: 3, nombre: 'Hoodie Snoopy Aviador', precio: 180, img: 'https://www.quiubolee.com/cdn/shop/products/S5_1_1200x1200.jpg?v=1666103039', desc: 'Hoodie con capucha y diseño de Snoopy como piloto' },
+    { id: 4, nombre: 'Polera Charlie Brown', precio: 75, img: 'https://i5.walmartimages.com/seo/Peanuts-Short-Sleeve-Crew-Neck-Charlie-Brown-Zig-Zag-Print-T-Shirt-Adult_501bb5d8-8fb9-47d5-86cf-2004672ae412_1.0aea0bdbc37c58766117140733b4c604.jpeg', desc: 'Polera con el icónico diseño de Charlie Brown' },
+    { id: 5, nombre: 'Chaleco Snoopy Invierno', precio: 145, img: 'https://cdn-images.farfetch-contents.com/30/86/20/12/30862012_60481492_600.jpg', desc: 'Chaleco térmico con bordado de Snoopy' },
+    { id: 6, nombre: 'Pijama Snoopy Suave', precio: 165, img: 'https://cortefiel.com/dw/image/v2/AAYL_PRD/on/demandware.static/-/Sites-gc-ws-master-catalog/default/dwed38225f/images/hi-res/P_313759402D8.jpg?sw=600&sh=900&sm=fit', desc: 'Set de pijama súper cómodo y abrigador' },
+    { id: 7, nombre: 'Chompa Snoopy Rayas', precio: 195, img: 'https://i1.adis.ws/i/janieandjack/100040687_JJ/color?$PDP_main$', desc: 'Chompa tejida con diseño a rayas y parche de Snoopy' },
+    { id: 8, nombre: 'Polo Snoopy Skateboard', precio: 90, img: 'https://img.joomcdn.net/6bef60bd4ec5732c041f7a3df896faff39b84f32_original.jpeg', desc: 'Polo deportivo con Snoopy en skateboard' },
+    { id: 9, nombre: 'Buzo Peanuts Gang', precio: 175, img: 'https://stjacks.com/images/productos/2150007801.jpg', desc: 'Buzo con todos los personajes de Peanuts' },
+    { id: 10, nombre: 'Camiseta Woodstock', precio: 80, img: 'https://photos.enjoei.com.br/camiseta-woodstock-snoopy-95004009/800x800/czM6Ly9waG90b3MuZW5qb2VpLmNvbS5ici9wcm9kdWN0cy8yOTU3OC9jNzYyZWI4MzUwMmVkZjg2ODU4ZTI0ZmZjYTJlY2ViNC5qcGc', desc: 'Camiseta con estampado del amigo de Snoopy' },
+    { id: 11, nombre: 'Jacket Snoopy Béisbol', precio: 220, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTNDOO1Rnew4e_a7YWPfAHzNDC2QSFrRNbbrg&s', desc: 'Chaqueta estilo béisbol con parches bordados' },
+    { id: 12, nombre: 'Remera Snoopy Surfista', precio: 85, img: 'https://cdn-images.farfetch-contents.com/29/72/43/35/29724335_58893635_1000.jpg', desc: 'Remera con diseño de Snoopy haciendo surf' },
+    { id: 13, nombre: 'Sweater Lucy Van Pelt', precio: 160, img: 'https://m.media-amazon.com/images/I/B1WGlLC+iaL._CLa%7C2140%2C2000%7CA1Is3p7NQvL.png%7C0%2C0%2C2140.0%2C2000.0_UY1000_.png', desc: 'Sweater con diseño de Lucy y su consultorio' },
+    { id: 14, nombre: 'Polo Snoopy Joe Cool', precio: 95, img: 'https://cdnx.jumpseller.com/inlov/image/61185045/TOPBLANCOJOECOOL.jpg?1746398106', desc: 'Polo con Snoopy en su versión Joe Cool' },
+    { id: 15, nombre: 'Hoodie Peanuts Otoño', precio: 185, img: 'https://m.media-amazon.com/images/I/B1WGlLC+iaL._CLa%7C2140%2C2000%7CB1jmQ5VTp-L.png%7C0%2C0%2C2140.0%2C2000.0_UY1000_.png', desc: 'Hoodie edición especial de otoño' },
+    { id: 16, nombre: 'Camiseta Snoopy Astronauta', precio: 90, img: 'https://images-na.ssl-images-amazon.com/images/I/71B1m1UPa5L._AC_UL600_SR600,600_.jpg', desc: 'Camiseta con Snoopy explorando el espacio' },
+    { id: 17, nombre: 'Campera Snoopy Denim', precio: 240, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSmr5l6POgE_K0U-bbyUGEyhiE238EsQTU9Kg&s', desc: 'Campera de jean con parches de Peanuts' },
+    { id: 18, nombre: 'Polera Snoopy Músico', precio: 85, img: 'https://www.rockitchile.cl/img/productos/140/1.png?date=', desc: 'Polera con Snoopy tocando la guitarra' },
+    { id: 19, nombre: 'Sudadera Linus Manta', precio: 170, img: 'https://m.media-amazon.com/images/I/A1dbsmzbGeL._CLa%7C2140%2C2000%7C81vZsVA83ML.png%7C0%2C0%2C2140.0%2C2000.0_UY1000_.png', desc: 'Sudadera con diseño de Linus y su manta' },
+    { id: 20, nombre: 'Conjunto Deportivo Snoopy', precio: 210, img: 'https://ae-pic-a1.aliexpress-media.com/kf/Sb21ff29c62294714b42fa937336e841cE.jpg', desc: 'Set completo de polera y pantalón deportivo' }
+  ],
+  ACCESORIOS: [
+    { id: 21, nombre: 'Gorra Peanuts Clásica', precio: 120, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQlNunH0ZwRFjMCJ2jXt1ufmfnzapggf4Xeig&s', desc: 'Gorra ajustable con logo bordado de Snoopy' },
+    { id: 22, nombre: 'Mochila Snoopy Grande', precio: 195, img: 'https://cdn.juguetilandia.com/images/articulos/1999964066g00.jpg', desc: 'Mochila espaciosa con múltiples compartimientos' },
+    { id: 23, nombre: 'Bufanda Snoopy Suave', precio: 65, img: 'https://cdn.aboutstatic.com/file/images/548e748853d1ceeb7757fc8405f01ee3.jpg', desc: 'Bufanda suave y abrigadora' },
+    { id: 24, nombre: 'Llavero Snoopy 3D', precio: 35, img: 'https://m.media-amazon.com/images/I/51m0UIAb1CL._UY1000_.jpg', desc: 'Llavero de goma con diseño tridimensional' },
+    { id: 25, nombre: 'Cartera Peanuts Estampada', precio: 145, img: 'https://regalosmuna.com/cdn/shop/files/1_35eb4854-0d4d-4391-9060-273439988298.png?v=1711067775', desc: 'Cartera con estampado all-over de personajes' },
+    { id: 26, nombre: 'Cinturón Snoopy Hebilla', precio: 95, img: 'https://images-na.ssl-images-amazon.com/images/I/81DM-GmLWxL._AC_UL600_SR600,600_.jpg', desc: 'Cinturón con hebilla metálica de Snoopy' },
+    { id: 27, nombre: 'Calcetines Set Peanuts', precio: 55, img: 'https://m.media-amazon.com/images/I/71Ui5dEWKyL._UY1000_.jpg', desc: 'Set de 3 pares de calcetines con diseños variados' },
+    { id: 28, nombre: 'Gorro Beanie Snoopy', precio: 75, img: 'https://fanarmy.shop/cdn/shop/products/403A9930.jpg?v=1751998040', desc: 'Gorro de lana con pompón y bordado' },
+    { id: 29, nombre: 'Paraguas Snoopy Automático', precio: 135, img: 'https://www.tradeinn.com/f/13796/137963231/safta-paraguas-snoopy-umbrella.webp', desc: 'Paraguas automático resistente al viento' },
+    { id: 30, nombre: 'Bolso Tote Peanuts', precio: 125, img: 'https://ss511.liverpool.com.mx/xl/1175421846.jpg', desc: 'Bolso de lona grande para uso diario' },
+    { id: 31, nombre: 'Guantes Snoopy Touch', precio: 85, img: 'https://http2.mlstatic.com/D_NQ_NP_942532-MLC84353955001_052025-O.webp', desc: 'Guantes con punta táctil para smartphones' },
+    { id: 32, nombre: 'Billetera Snoopy Piel', precio: 110, img: 'https://i.ebayimg.com/thumbs/images/g/ZCoAAOSww11oN6pl/s-l1200.jpg', desc: 'Billetera de cuero sintético con grabado' },
+    { id: 33, nombre: 'Bandolera Woodstock', precio: 155, img: 'https://http2.mlstatic.com/D_NQ_NP_851893-CBT91909998038_092025-O.webp', desc: 'Bandolera pequeña perfecta para paseos' },
+    { id: 34, nombre: 'Pin Set Colección', precio: 45, img: 'https://www.erstwilder.com/cdn/shop/products/erstwilderxpeanuts-enamel-pin-set-multi_grande.jpg?v=1607385298', desc: 'Set de 5 pins metálicos esmaltados' },
+    { id: 35, nombre: 'Riñonera Snoopy Sport', precio: 95, img: 'https://ae01.alicdn.com/kf/Sec685135214c47d0a2cc39553aa32b94q.jpg', desc: 'Riñonera deportiva con múltiples bolsillos' },
+    { id: 36, nombre: 'Pañuelo Bandana Peanuts', precio: 40, img: 'https://images-na.ssl-images-amazon.com/images/I/71DziABDDwL._AC_UL495_SR435,495_.jpg', desc: 'Pañuelo de algodón con diseño vintage' },
+    { id: 37, nombre: 'Porta Celular Snoopy', precio: 70, img: 'https://m.media-amazon.com/images/I/612ZzKrew2L.jpg_BO30,255,255,255_UF900,850_SR1910,1000,0,C_QL100_.jpg', desc: 'Funda porta celular con correa ajustable' },
+    { id: 38, nombre: 'Collar Colgante Snoopy', precio: 90, img: 'https://www.emp-online.es/dw/image/v2/BBQV_PRD/on/demandware.static/-/Sites-master-emp/default/dw8559acb6/images/5/8/5/3/585372a.jpg?sw=350&sh=400&sm=fit&sfrm=png', desc: 'Collar con dije de Snoopy en acero' },
+    { id: 39, nombre: 'Aretes Peanuts Set', precio: 65, img: 'https://m.media-amazon.com/images/I/812o+z0A7dL._UY1000_.jpg', desc: 'Set de aretes con diseños de personajes' },
+    { id: 40, nombre: 'Estuche Escolar Snoopy', precio: 80, img: 'https://lazycat.es/3362-large_default/estuche-snoopy-turquesa.jpg', desc: 'Estuche grande con múltiples compartimientos' }
+  ],
+  DECORACION: [
+    { id: 41, nombre: 'Taza Snoopy Cerámica', precio: 75, img: 'https://lasecadora.es/wp-content/uploads/2022/12/mockup-featuring-an-11-oz-mug-with-a-colored-rim-placed-against-a-plain-background-43583-r-el2-3_camisetas_originales_personalizadas-2.jpg', desc: 'Taza de cerámica de alta calidad 350ml' },
+    { id: 42, nombre: 'Cojín Decorativo Grande', precio: 115, img: 'https://welcomehomelima.com/cdn/shop/products/COJIN-SNOOPY-CELESTE-2_large.jpg?v=1615004036', desc: 'Cojín relleno 45x45cm con diseño bordado' },
+    { id: 43, nombre: 'Poster Enmarcado Vintage', precio: 135, img: 'https://i5.walmartimages.com/seo/Charles-Schulz-Peanuts-Charlie-Brown-Snoopy-Golfing-New-Custom-Framed-Art-Generic_60813fc0-bb8f-4162-8eef-ddf4de65854d.4b051698207e0e653b7f167c477e1d9c.jpeg?odnHeight=320&odnWidth=320&odnBg=FFFFFF', desc: 'Poster de alta calidad con marco de madera' },
+    { id: 44, nombre: 'Lámpara Snoopy LED', precio: 225, img: 'https://m.media-amazon.com/images/I/51-kz-LOWRL.jpg', desc: 'Lámpara LED con forma de Snoopy, 3 intensidades' },
+    { id: 45, nombre: 'Reloj de Pared Peanuts', precio: 185, img: 'https://m.media-amazon.com/images/I/71cnAL1d5aL.jpg', desc: 'Reloj decorativo silencioso 30cm diámetro' },
+    { id: 46, nombre: 'Tapete Antideslizante', precio: 95, img: 'https://http2.mlstatic.com/D_NQ_NP_912338-MLM48234202426_112021-O.webp', desc: 'Tapete para entrada 60x40cm' },
+    { id: 47, nombre: 'Mantas Polar Snoopy', precio: 165, img: 'https://m.media-amazon.com/images/I/81IpxE+xOiL._UF350,350_QL50_.jpg', desc: 'Manta suave tipo polar 150x120cm' },
+    { id: 48, nombre: 'Set Platos Snoopy', precio: 195, img: 'https://www.picclickimg.com/RFQAAOSw9JllSQ2y/Juego-de-vajilla-plato-cocina-CORELLE-x-Peanuts.webp', desc: 'Set de 4 platos de cerámica decorativos' },
+    { id: 49, nombre: 'Velas Aromáticas Peanuts', precio: 85, img: 'https://static1.candleworld.eu/hpeciai/92df8371e53e4623b258f214318a612d/pol_il_Swieca-zapachowa-na-szczescie-Snoopy-Good-Luck-Peanuts-250-g-Powodzenia-11866_1.webp', desc: 'Set de 3 velas aromáticas con diseño' },
+    { id: 50, nombre: 'Marco Fotos Snoopy', precio: 105, img: 'https://i.pinimg.com/236x/34/49/45/344945ae8966395abab0136776b0be71.jpg', desc: 'Marco para foto 15x20cm decorado' },
+    { id: 51, nombre: 'Cortina de Baño Peanuts', precio: 145, img: 'https://m.media-amazon.com/images/I/71tN8rZ7EtL.jpg', desc: 'Cortina impermeable 180x180cm' },
+    { id: 52, nombre: 'Organizador Escritorio', precio: 125, img: 'https://http2.mlstatic.com/D_NQ_NP_965182-MLM82124428624_022025-O.webp', desc: 'Organizador de escritorio con divisiones' },
+    { id: 53, nombre: 'Calendario Pared 2025', precio: 75, img: 'https://m.media-amazon.com/images/I/61RxZGiFnxL.jpg', desc: 'Calendario anual con ilustraciones exclusivas' },
+    { id: 54, nombre: 'Jarrón Decorativo Snoopy', precio: 155, img: 'https://www.bdaddik.com/38348-large_default/jarron-ceramica-figura-blogo-peanuts-snoopy-love-is-in-bloom-amarillo-267cm.jpg', desc: 'Jarrón de cerámica pintado a mano' },
+    { id: 55, nombre: 'Alfombra Redonda Peanuts', precio: 215, img: 'https://m.media-amazon.com/images/I/71U4Mwe+5DL._AC_UF894,1000_QL80_.jpg', desc: 'Alfombra redonda suave 100cm diámetro' },
+    { id: 56, nombre: 'Perchero Pared Snoopy', precio: '135', img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSHPjEpyOyMFmsSe-JmcLHAbijxZMaj-iN6bQ&s', desc: 'Perchero de pared con 4 ganchos' },
+    { id: 57, nombre: 'Espejo de Mano', precio: 175, img: 'https://tb-static.uber.com/prod/image-proc/processed_images/c7eadc6fcab7dea31809fcd84eec7151/957777de4e8d7439bef56daddbfae227.jpeg', desc: 'Espejo temático de mano' },
+    { id: 58, nombre: 'Porta Velas Set', precio: 95, img: 'https://http2.mlstatic.com/D_Q_NP_985825-MLU78138244885_082024-O.webp', desc: 'Set de 3 porta velas decorativos' },
+    { id: 59, nombre: 'Bandeja Servicio Vintage', precio: 115, img: 'https://i.etsystatic.com/12432891/r/il/e6f955/5559448211/il_fullxfull.5559448211_5q5a.jpg', desc: 'Bandeja rectangular con diseño retro' },
+    { id: 60, nombre: 'Cesta Organizadora', precio: 105, img: 'https://http2.mlstatic.com/D_NQ_NP_900833-MLM76155383443_052024-O.webp', desc: 'Cesta de tela plegable con asas' }
+  ],
+  COLECCION: [
+    { id: 61, nombre: 'Funko Pop Snoopy Aviador', precio: 245, img: 'https://http2.mlstatic.com/D_NQ_NP_892312-MLM73038409863_112023-O.webp', desc: 'Figura coleccionable Funko edición limitada' },
+    { id: 62, nombre: 'Peluche Snoopy Premium 50cm', precio: 285, img: 'https://http2.mlstatic.com/D_888055-MLA91940658611_092025-C.jpg', desc: 'Peluche grande de alta calidad' },
+    { id: 63, nombre: 'Comic Original Peanuts Vol.1', precio: 165, img: 'https://www.fantagraphics.com/cdn/shop/products/TheCompletePeanuts-Hard-V1-3DCover_85f32f44-1afc-4821-9c98-9db33f0e90c0_800x.png?v=1615597511', desc: 'Comic vintage edición especial tapa dura' },
+    { id: 64, nombre: 'Pins Coleccionables Metálicos', precio: 95, img: 'https://http2.mlstatic.com/D_891719-MLM88826183487_072025-O.jpg', desc: 'Set de 6 pins edición limitada numerados' },
+    { id: 65, nombre: 'Taza Coleccionista Numerada', precio: 125, img: 'https://http2.mlstatic.com/D_NQ_NP_773966-MLM84234542296_052025-O-taza-snoopy-peanuts-metalica-diseno-edicion-the-beatles.webp', desc: 'Taza de porcelana edición limitada con certificado' },
+    { id: 66, nombre: 'Estatuilla Snoopy Resina', precio: 320, img: 'https://http2.mlstatic.com/D_NQ_NP_955849-MLM83886826747_042025-O-mini-figura-snoopy-marinero-capitan-resina-pintada-a-mano.webp', desc: 'Estatuilla pintada a mano 25cm altura' },
+    { id: 67, nombre: 'Funko Pop Charlie Brown', precio: 240, img: 'https://m.media-amazon.com/images/I/81pJ12B99NL._AC_UF894,1000_QL80_.jpg', desc: 'Figura coleccionable con su camiseta rayada' },
+    { id: 68, nombre: 'Peluche Woodstock 30cm', precio: 195, img: 'https://http2.mlstatic.com/D_NQ_NP_740662-MLA88413754458_072025-O.webp', desc: 'Peluche del amiguito amarillo de Snoopy' },
+    { id: 69, nombre: 'Set Comics Completo Peanuts', precio: 445, img: 'https://www.qbd.com.au/img/products/0/9781787738607.jpg', desc: 'Colección completa de 5 tomos encuadernados' },
+    { id: 70, nombre: 'Figura Snoopy Joe Cool', precio: 275, img: 'https://www.miyagi.es/52257-large_default/figura-pop-snoopy-joe-cool-y-woodstock.jpg', desc: 'Figura articulada de colección con accesorios' },
+    { id: 71, nombre: 'Póster Firmado Edición', precio: 385, img: 'https://www.originalfilmart.com/cdn/shop/products/snoopy_come_home_1972_3_sheet_original_film_art_1600x.jpg?v=1551894687', desc: 'Póster vintage con firma impresa del creador' },
+    { id: 72, nombre: 'Peluche Lucy 40cm', precio: 225, img: 'https://m.media-amazon.com/images/I/713S9FsAauS._AC_UF894,1000_QL80_.jpg', desc: 'Peluche de Lucy Van Pelt con vestido' },
+    { id: 73, nombre: 'Moneda Conmemorativa Set', precio: 295, img: 'https://i.etsystatic.com/12406678/r/il/1c6660/4423425226/il_1080xN.4423425226_pt20.jpg', desc: 'Set de 3 monedas chapadas en oro con estuche' },
+    { id: 74, nombre: 'Libro Arte Peanuts Deluxe', precio: 365, img: 'https://m.media-amazon.com/images/I/71TPF5mPhLL._UF350,350_QL80_.jpg', desc: 'Libro de arte con ilustraciones exclusivas' },
+    { id: 75, nombre: 'Funko Pop Linus con Manta', precio: 245, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTP_ClLzWKrW5WQsD7HjKhCkkp2sbD2XO09FQ&s', desc: 'Figura de Linus con su icónica manta azul' },
+    { id: 76, nombre: 'Escultura Snoopy Bronce', precio: 565, img: 'https://media.artsper.com/artwork/1977555_1_grid.jpg', desc: 'Escultura acabado bronce 30cm, pieza única' },
+    { id: 77, nombre: 'Set Completo Peluches', precio: 895, img: 'https://www.ubuy.pe/productimg/?image=aHR0cHM6Ly9pbWFnZXMtbmEuc3NsLWltYWdlcy1hbWF6b24uY29tL2ltYWdlcy9JLzUxS290eTRaWUxMLl9TUzQwMF8uanBn.jpg', desc: 'Set de 8 peluches de todos los personajes' },
+    { id: 78, nombre: 'Vinilo Snoopy Edición', precio: 425, img: 'https://altoquerecords.cl/cdn/shop/files/PEANUTS_1200x1200.png?v=1722384824', desc: 'Disco vinilo con música temática en edición limitada' },
+    { id: 79, nombre: 'Reloj Coleccionista Peanuts', precio: 485, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS6pnJg9JxhCX8GqRgniBjLNDiSAl_Sy6MHkl15Q8Ho58aXMUW8u4PMbysKHfMzwBMt32Q&usqp=CAU', desc: 'Reloj de bolsillo edición numerada con cadena' },
+    { id: 80, nombre: 'Caja Musical Snoopy', precio: 335, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTRaAuz7aM2hTkmJFcmQxlZpD4dUpuTjpNVFg&s', desc: 'Caja musical para niñas, adolescentes y mujeres, con compartimentos' }
+  ]
+};
+
+let categoriaActual = 'ROPA';
+let carrito = [];
+
+// Inicializar: generar botones de categorias y mostrar productos
+window.onload = function(){
+  generarBotonesCategorias();
+  mostrarProductos(categoriaActual);
+
+  // enlaces internos: desplazamiento dentro del mockup
+  document.querySelectorAll('a[href^="#"]').forEach(a=>{
+    a.addEventListener('click', function(ev){
+      ev.preventDefault();
+      const targetId = this.getAttribute('href').substring(1);
+      const target = document.getElementById(targetId);
+      if(target){
+        scrollToSectionById(targetId);
+        // cerrar nav si esta abierto (modo movil)
+        document.querySelector('nav').classList.remove('active');
+      }
+    });
+  });
+
+  // validaciones en tiempo real (si los campos existen)
+  const campos = {
+    nombre: /^[a-zA-ZÁÉÍÓÚáéíóúñÑ\s]{3,}$/,
+    celular: /^\d{8}$/,
+    correo: /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+  };
+  if(document.getElementById('nombre')){
+    document.getElementById('nombre').addEventListener('input', validarCampo);
+    document.getElementById('celular').addEventListener('input', validarCampo);
+    document.getElementById('correo').addEventListener('input', validarCampo);
+  }
+};
+
+// Generar dinamicamente botones de categorias (restaurado)
+function generarBotonesCategorias(){
+  const cont = document.getElementById('categorias-list');
+  cont.innerHTML = '';
+  for(const cat in productos){
+    const btn = document.createElement('button');
+    btn.className = 'categoria-btn' + (cat===categoriaActual ? ' active' : '');
+    btn.textContent = cat;
+    btn.onclick = function(){ filtrarCategoria(cat); };
+    cont.appendChild(btn);
+  }
+}
+
+// filtrar categoria (mismo nombre)
+function filtrarCategoria(cat){
+  categoriaActual = cat;
+  mostrarProductos(cat);
+  // actualizar clases de botones
+  document.querySelectorAll('.categoria-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.categoria-btn').forEach(b=>{ if(b.textContent===cat) b.classList.add('active'); });
+}
+
+// mostrar productos (muestra todos los productos de la categoria horizontalmente)
+function mostrarProductos(categoria){
+  const grid = document.getElementById('productos-grid');
+  grid.innerHTML = '';
+  productos[categoria].forEach(prod=>{
+    const card = document.createElement('div');
+    card.className = 'producto-card';
+    card.onclick = ()=> abrirDetalle(prod);
+    card.innerHTML = `
+      <img src="${prod.img}" alt="${prod.nombre}">
+      <h3>${prod.nombre}</h3>
+      <p class="precio">${prod.precio} Bs</p>
+      <button class="btn" onclick="event.stopPropagation(); agregarAlCarrito(${prod.id}, '${categoria}')">Añadir al Carrito</button>
+    `;
+    grid.appendChild(card);
+  });
+  // ajustar scroll left al inicio
+  const gridElem = document.getElementById('productos-grid');
+  gridElem.scrollLeft = 0;
+}
+
+// abrir detalle (mantengo nombre)
+function abrirDetalle(prod){
+  const modal = document.getElementById('modal-producto');
+  const body = document.getElementById('modal-body');
+  body.innerHTML = `
+    <img src="${prod.img}" alt="${prod.nombre}" style="max-width:140px;border-radius:8px;">
+    <div style="margin-top:10px;">
+      <h2>${prod.nombre}</h2>
+      <p>${prod.desc}</p>
+      <p class="precio">${prod.precio} Bs</p>
+      <br>
+      <button class="btn" onclick="agregarAlCarrito(${prod.id}, '${categoriaActual}')">Añadir al Carrito</button>
+    </div>
+  `;
+  modal.classList.add('active');
+}
+
+// cerrar modal
+function cerrarModal(){ document.getElementById('modal-producto').classList.remove('active'); }
+
+// agregar al carrito (igual nombre)
+function agregarAlCarrito(id,categoria){
+  let producto=null;
+  for(let cat in productos){
+    const encontrado = productos[cat].find(p=>p.id===id);
+    if(encontrado){ producto=encontrado; break; }
+  }
+  if(!producto) return;
+  const existe = carrito.find(item=>item.id===id);
+  if(existe) existe.cantidad++;
+  else carrito.push({...producto,cantidad:1});
+  actualizarCarrito();
+  mostrarHuella();
+}
+
+// mostrar huella (pequeña animacion)
+function mostrarHuella(){
+  const huella = document.createElement('div');
+  huella.style.position='fixed';
+  huella.style.top='56px';
+  huella.style.left='50%';
+  huella.style.transform='translateX(-50%)';
+  huella.style.fontSize='1.6em';
+  huella.textContent='🐾';
+  huella.style.opacity='0';
+  huella.style.zIndex='5000';
+  document.body.appendChild(huella);
+  huella.animate([{opacity:0,transform:'translate(-50%,-10px) scale(.8)'},{opacity:1,transform:'translate(-50%,0) scale(1)'},{opacity:0,transform:'translate(-50%,30px) scale(.8)'}],{duration:1200});
+  setTimeout(()=>huella.remove(),1200);
+}
+
+// quitar del carrito
+function quitarDelCarrito(id){
+  carrito = carrito.filter(item=>item.id!==id);
+  actualizarCarrito();
+}
+
+// actualizar carrito
+function actualizarCarrito(){
+  const count = document.getElementById('carrito-count');
+  const items = document.getElementById('carrito-items');
+  const total = document.getElementById('total-precio');
+  count.textContent = carrito.reduce((sum,item)=>sum+item.cantidad,0);
+  items.innerHTML = carrito.map(item=>`
+    <div class="carrito-item">
+      <img src="${item.img}" alt="${item.nombre}">
+      <div style="flex:1">
+        <strong>${item.nombre}</strong><br>
+        <span>${item.precio} Bs x ${item.cantidad}</span>
+      </div>
+      <div style="display:flex;gap:5px;flex-direction:column;">
+        <button class="btn" style="padding:6px 8px;" onclick="agregarAlCarrito(${item.id})">➕</button>
+        <button class="btn" style="padding:6px 8px;" onclick="quitarDelCarrito(${item.id})">🗑️</button>
+      </div>
+    </div>
+  `).join('');
+  total.textContent = carrito.reduce((sum,item)=>sum + (item.precio * item.cantidad),0);
+}
+
+// toggle carrito
+function toggleCarrito(){
+  document.getElementById('carrito-sidebar').classList.toggle('active');
+}
+
+// generar factura (mantengo lógica)
+function generarFactura(e){
+  e.preventDefault();
+  if(carrito.length===0){ alert('El carrito está vacío. Añade productos antes de generar la factura.'); return; }
+  const nombre = document.getElementById('nombre').value;
+  const celular = document.getElementById('celular').value;
+  const correo = document.getElementById('correo').value;
+  const departamento = document.getElementById('departamento').value;
+  const direccion = document.getElementById('direccion').value;
+  const comentario = document.getElementById('comentario').value;
+  const total = carrito.reduce((sum,item)=>sum + (item.precio * item.cantidad),0);
+  let factura = `╔═══════════════════════════════════════╗
+║     SNOOPY STORE BOLIVIA - FACTURA    ║
+╚═══════════════════════════════════════╝
+
+DATOS DEL CLIENTE:
+───────────────────────────────────────
+Nombre: ${nombre}
+Celular: ${celular}
+Correo: ${correo}
+Departamento: ${departamento}
+Dirección: ${direccion}
+
+PRODUCTOS:
+───────────────────────────────────────
+`;
+  carrito.forEach(item=>{
+    factura += `${item.nombre}
+  Cantidad: ${item.cantidad} x ${item.precio} Bs = ${item.cantidad * item.precio} Bs\n\n`;
+  });
+  factura += `───────────────────────────────────────
+TOTAL: ${total} Bs
+═══════════════════════════════════════
+
+${comentario ? 'Comentario: ' + comentario + '\n\n' : ''}
+Gracias por tu compra en Snoopy Store Bolivia
+📍 Av. Principal #123, Santa Cruz – Bolivia
+📞 +591 700 00000
+📧 contacto@snoopystore.com
+  `;
+  alert(factura);
+  document.querySelector('form').reset();
+  carrito = [];
+  actualizarCarrito();
+}
+
+// cerrar modal al click fuera
+document.getElementById('modal-producto').addEventListener('click', function(e){
+  if(e.target===this) cerrarModal();
+});
+
+// cerrar carrito al click fuera (pero dentro del documento)
+document.addEventListener('click', function(e){
+  const sidebar = document.getElementById('carrito-sidebar');
+  const icono = document.querySelector('.carrito-icono');
+  if(sidebar.classList.contains('active') && !sidebar.contains(e.target) && !icono.contains(e.target)){
+    sidebar.classList.remove('active');
+  }
+});
+
+// util: scroll productos con flechas (cantidad basada en ancho tarjeta)
+function scrollProductos(dir){
+  const grid=document.getElementById('productos-grid');
+  const cardWidth=grid.querySelector('.producto-card')?.offsetWidth||260;
+  const gap=14;
+  const amount=cardWidth+gap;
+  const newScroll=grid.scrollLeft+dir*amount;
+  const center=newScroll-(grid.clientWidth-cardWidth)/2;
+  grid.scrollTo({left:center,behavior:'smooth'});
+}
+
+// util: scroll to section inside mockup
+function scrollToSectionById(id){
+  const target = document.getElementById(id);
+  if(!target) return;
+  const viewport = document.querySelector('.mobile-viewport');
+  // compute offsetTop relative to viewport
+  const top = target.getBoundingClientRect().top - document.querySelector('.mobile-viewport').getBoundingClientRect().top + viewport.scrollTop - 60;
+  viewport.scrollTo({top, behavior:'smooth'});
+}
+function scrollToSection(ev,id){
+  ev && ev.preventDefault();
+  scrollToSectionById(id);
+}
+
+// validacion en tiempo real (si existe)
+function validarCampo(e){
+  const campo = e.target;
+  const id = campo.id;
+  const campos = {
+    nombre: /^[a-zA-ZÁÉÍÓÚáéíóúñÑ\s]{3,}$/,
+    celular: /^\d{8}$/,
+    correo: /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+  };
+  const valido = campos[id] ? campos[id].test(campo.value) : true;
+  campo.style.borderColor = valido ? 'green' : 'red';
+}
+</script>
+</body>
+</html>

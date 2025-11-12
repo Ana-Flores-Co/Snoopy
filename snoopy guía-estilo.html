@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guía de Estilo - Snoopy Store Bolivia</title>
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: 'Arial', sans-serif;
+    background: #e8eef3;
+    min-height: 100vh;
+    padding: 40px 20px;
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    top: -50px;
+    left: -50px;
+  }
+
+  body::after {
+    bottom: -50px;
+    right: -50px;
+  }
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+  }
+
+  header {
+    text-align: center;
+    margin-bottom: 40px;
+    background: #ffd600;
+    padding: 25px 30px;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  }
+
+  header h1 {
+    color: #000000;
+    font-size: 2.2rem;
+    font-weight: bold;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 25px;
+    margin-bottom: 25px;
+  }
+
+  .grid-full {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 25px;
+    margin-bottom: 25px;
+  }
+
+  .card {
+    background: white;
+    border-radius: 15px;
+    padding: 25px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 3px solid transparent;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    border-color: #ffd600;
+  }
+
+  .card h2 {
+    color: #000000;
+    font-size: 1.3rem;
+    margin-bottom: 18px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: bold;
+    text-align: center;
+  }
+
+  /* === TEXTOS === */
+  .texto-ejemplo {
+    margin-bottom: 12px;
+    padding: 10px 12px;
+    background: #e8eef3;
+    border-radius: 10px;
+    width: 100%;
+  }
+  
+  .texto-ejemplo:last-child {
+    margin-bottom: 0;
+  }
+
+  .texto-label {
+    font-size: 0.85rem;
+    color: #e63946;
+    font-weight: bold;
+    margin-bottom: 5px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    text-align: center;
+  }
+
+  .texto-specs {
+    font-size: 0.8em;
+    color: #333;
+    margin-top: 5px;
+    line-height: 1.5;
+    text-align: center;
+  }
+
+  .texto-hero {
+    font-family: 'Arial', sans-serif;
+    font-weight: bold;
+    font-size: 38px;
+    color: #000000;
+  }
+
+  .texto-movil {
+    font-family: 'Arial', sans-serif;
+    font-weight: normal;
+    font-size: 28px;
+    color: #000000;
+  }
+
+  .encabezado-1 {
+    font-family: 'Arial', sans-serif;
+    font-weight: bold;
+    font-size: 32px;
+    color: #000000;
+  }
+
+  .encabezado-2 {
+    font-family: 'Arial', sans-serif;
+    font-weight: bold;
+    font-size: 24px;
+    color: #000000;
+  }
+
+  .encabezado-3 {
+    font-family: 'Arial', sans-serif;
+    font-weight: normal;
+    font-size: 20px;
+    color: #000000;
+  }
+
+  /* === COLORES === */
+  .colores-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    max-width: 400px;
+    margin: 0 auto;
+  }
+
+  .color-box {
+    text-align: center;
+  }
+
+  .color-sample {
+    width: 200px;
+    height: 200px;
+    border-radius: 15px;
+    margin-bottom: 10px;
+    border: 3px solid #000;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+  }
+
+  .color-code {
+    font-family: monospace;
+    font-size: 0.9em;
+    color: #000;
+    font-weight: bold;
+  }
+
+  .color-name {
+    font-size: 0.8em;
+    margin-top: 5px;
+    color: #333;
+  }
+
+  /* === ICONOS === */
+  .iconos-grid {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    gap: 15px;
+    flex-wrap: wrap;
+  }
+
+  .icono-box {
+    text-align: center;
+    padding: 12px;
+    background: #ffd600;
+    border-radius: 15px;
+    border: 3px solid #000000;
+    min-width: 70px;
+    transition: all 0.3s ease;
+  }
+
+  .icono-box:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+  }
+
+  .icono {
+    font-size: 2.5em;
+    margin-bottom: 5px;
+  }
+
+  .icono-label {
+    font-size: 0.7em;
+    color: #000;
+    font-weight: bold;
+    text-transform: uppercase;
+  }
+
+  /* === ILUSTRACIONES === */
+  .ilustraciones-grid {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+
+  .ilustracion-box {
+    text-align: center;
+  }
+
+  .ilustracion-box img {
+    max-width: 130px;
+    height: 130px;
+    object-fit: contain;
+    border-radius: 15px;
+    background: #fff;
+    padding: 10px;
+    border: 3px solid #ffd600;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+  }
+
+  .ilustracion-box div {
+    margin-top: 10px;
+    font-weight: bold;
+    color: #000000;
+    font-size: 0.85rem;
+  }
+
+  /* === BOTONES === */
+  .botones-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    width: 100%;
+    align-items: center;
+  }
+
+  .boton-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .btn-ejemplo {
+    display: inline-block;
+    padding: 12px 30px;
+    border-radius: 15px;
+    text-decoration: none;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+    font-size: 0.85rem;
+    text-align: center;
+    transition: all 0.3s ease;
+    font-family: 'Arial', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .btn-primary {
+    background: #e63946;
+    color: white;
+    border: 3px solid #000000;
+  }
+
+  .btn-primary:hover {
+    background: #ffd600;
+    color: #000000;
+    transform: scale(1.05);
+  }
+
+  .btn-secondary {
+    background: #ffd600;
+    color: #000;
+    border: 3px solid #000;
+  }
+
+  .btn-secondary:hover {
+    background: #e63946;
+    color: #fff;
+    transform: scale(1.05);
+  }
+
+  /* === LOGOTIPO === */
+  .logotipo-box {
+    text-align: center;
+    padding: 25px 30px;
+    background: #ffd600;
+    border-radius: 15px;
+    border: 3px solid #000000;
+  }
+
+  .logo-text {
+    font-size: 1.8em;
+    font-weight: bold;
+    color: #000;
+  }
+
+  /* === ELEMENTOS ADICIONALES === */
+  .elementos-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    margin-top: 20px;
+    width: 100%;
+  }
+
+  .elemento-item {
+    text-align: center;
+  }
+
+  /* === BOTÓN VOLVER === */
+  .volver-btn {
+    display: block;
+    margin: 40px auto 0;
+    padding: 12px 40px;
+    background: #e63946;
+    color: white;
+    text-decoration: none;
+    border-radius: 15px;
+    font-weight: bold;
+    font-size: 0.85rem;
+    text-align: center;
+    border: 3px solid #000000;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    max-width: 300px;
+  }
+
+  .volver-btn:hover {
+    background: #ffd600;
+    color: #000000;
+    transform: scale(1.05);
+  }
+
+  @media (max-width: 768px) {
+    h1 {
+      font-size: 2rem;
+    }
+
+    header {
+      text-align: center;
+      margin-left: -20px;
+      margin-right: -20px;
+    }
+
+    .grid {
+      grid-template-columns: 1fr;
+    }
+
+    .texto-hero {
+      font-size: 32px;
+    }
+
+    .encabezado-1 {
+      font-size: 28px;
+    }
+
+    .elementos-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <header>
+    <h1>GUÍA DE ESTILO</h1>
+  </header>
+
+  <!-- FILA 1: TEXTOS Y COLORES -->
+  <div class="grid">
+    <!-- TEXTOS -->
+    <div class="card">
+      <h2>Textos</h2>
+      
+      <div class="texto-ejemplo">
+        <div class="texto-label">TEXTO HERO</div>
+        <div class="texto-hero">Snoopy Store</div>
+                  <div class="texto-specs">Arial / Bold / 38</div>
+      </div>
+
+      <div class="texto-ejemplo">
+        <div class="texto-label">TEXTO HERO MÓVIL</div>
+        <div class="texto-movil">Snoopy Store</div>
+                  <div class="texto-specs">Arial / Regular / 28</div>
+      </div>
+
+      <div class="texto-ejemplo">
+        <div class="texto-label">ENCABEZADO 1</div>
+        <div class="encabezado-1">Productos</div>
+                  <div class="texto-specs">Arial / Bold / 32</div>
+      </div>
+
+      <div class="texto-ejemplo">
+        <div class="texto-label">ENCABEZADO 2</div>
+        <div class="encabezado-2">Categorías</div>
+                  <div class="texto-specs">Arial / Bold / 24</div>
+      </div>
+
+      <div class="texto-ejemplo">
+        <div class="texto-label">ENCABEZADO 3</div>
+        <div class="encabezado-3">Descripción</div>
+                  <div class="texto-specs">Arial / Normal / 20</div>
+      </div>
+    </div>
+
+    <!-- COLORES -->
+    <div class="card">
+      <h2>Colores</h2>
+      <div class="colores-grid">
+        <div class="color-box">
+          <div class="color-sample" style="background: #ffd600;"></div>
+          <div class="color-code">#FFD600</div>
+          <div class="color-name">Amarillo</div>
+        </div>
+        <div class="color-box">
+          <div class="color-sample" style="background: #e63946;"></div>
+          <div class="color-code">#E63946</div>
+          <div class="color-name">Rojo</div>
+        </div>
+        <div class="color-box">
+          <div class="color-sample" style="background: #ffffff;"></div>
+          <div class="color-code">#FFFFFF</div>
+          <div class="color-name">Blanco</div>
+        </div>
+        <div class="color-box">
+          <div class="color-sample" style="background: #000000;"></div>
+          <div class="color-code">#000000</div>
+          <div class="color-name">Negro</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FILA 2: ICONOS E ILUSTRACIONES -->
+  <div class="grid">
+    <!-- ICONOS -->
+    <div class="card">
+      <h2>Iconos</h2>
+      <div class="iconos-grid">
+        <div class="icono-box">
+          <div class="icono">🐾</div>
+          <div class="icono-label">Huella</div>
+        </div>
+        <div class="icono-box">
+          <div class="icono">🛒</div>
+          <div class="icono-label">Carrito</div>
+        </div>
+        <div class="icono-box">
+          <div class="icono">📍</div>
+          <div class="icono-label">Ubicación</div>
+        </div>
+        <div class="icono-box">
+          <div class="icono">📧</div>
+          <div class="icono-label">Correo</div>
+        </div>
+        <div class="icono-box">
+          <div class="icono">📞</div>
+          <div class="icono-label">Teléfono</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ILUSTRACIONES -->
+    <div class="card">
+      <h2>Ilustraciones</h2>
+      <div class="ilustraciones-grid">
+        <div class="ilustracion-box">
+          <img src="https://i.pinimg.com/originals/fb/ce/4a/fbce4a7be83db92276518aceea77bc5a.gif" alt="Snoopy saludando">
+          <div>Snoopy Saludando</div>
+        </div>
+        <div class="ilustracion-box">
+          <img src="https://i.pinimg.com/736x/56/ec/c3/56ecc39d941a3644c5f1683b1622a567.jpg" alt="Snoopy feliz">
+          <div>Snoopy Feliz</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FILA 3: BOTONES Y LOGOTIPO -->
+  <div class="grid">
+    <!-- BOTONES -->
+    <div class="card">
+      <h2>Botones</h2>
+      <div class="botones-grid">
+        <div>
+          <div class="texto-label" style="margin-bottom: 10px;">BOTÓN PRIMARIO</div>
+          <button class="btn-ejemplo btn-primary">Explorar Productos</button>
+          <div class="texto-specs" style="margin-top: 10px;">
+            Fondo: Rojo (#E63946)<br>
+            Hover: Amarillo (#FFD600)<br>
+            Border: Negro 3px<br>
+            Border-radius: 15px
+          </div>
+        </div>
+        
+        <div>
+          <div class="texto-label" style="margin-bottom: 10px;">BOTÓN SECUNDARIO</div>
+          <button class="btn-ejemplo btn-secondary">Añadir al Carrito</button>
+          <div class="texto-specs" style="margin-top: 10px;">
+            Fondo: Amarillo (#FFD600)<br>
+            Border: Negro 3px<br>
+            Hover: Rojo con texto blanco<br>
+            Border-radius: 15px
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LOGOTIPO -->
+    <div class="card">
+      <h2>Logotipo</h2>
+      <div class="logotipo-box">
+        <div class="logo-text">🐾 Snoopy Store Bolivia</div>
+      </div>
+      <div class="texto-specs" style="margin-top: 20px; text-align: center;">
+        Fuente: Arial Bold<br>
+        Tamaño: 2em / 32px<br>
+        Color: Negro sobre amarillo<br>
+        Border: Negro 3px
+      </div>
+    </div>
+  </div>
+
+  <!-- ELEMENTOS ADICIONALES -->
+  <div class="grid-full">
+    <div class="card">
+      <h2>Elementos de Diseño</h2>
+      <div class="elementos-grid">
+        <div class="elemento-item">
+          <div class="texto-label">BORDES</div>
+          <div class="texto-specs">
+            • Border-radius: 15px<br>
+            • Grosor: 3px<br>
+            • Color: Negro (#000)
+          </div>
+        </div>
+        <div class="elemento-item">
+          <div class="texto-label">SOMBRAS</div>
+          <div class="texto-specs">
+            • Cards: 0 4px 15px rgba(0,0,0,0.08)<br>
+            • Hover: 0 8px 25px rgba(0,0,0,0.15)
+          </div>
+        </div>
+        <div class="elemento-item">
+          <div class="texto-label">ESPACIADO</div>
+          <div class="texto-specs">
+            • Padding cards: 25px<br>
+            • Gap grid: 25px<br>
+            • Margin sections: 40px
+          </div>
+        </div>
+        <div class="elemento-item">
+          <div class="texto-label">ANIMACIONES</div>
+          <div class="texto-specs">
+            • Transition: all 0.3s ease<br>
+            • Hover: translateY(-5px)<br>
+            • Scale: 1.05
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <a href="index.html" class="volver-btn" onclick="window.history.back(); return false;">Volver al Panel</a>
+</div>
+
+</body>
+</html>
